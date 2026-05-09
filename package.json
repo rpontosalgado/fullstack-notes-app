@@ -1,0 +1,12 @@
+{
+  "name": "roberto-de-abreu-salgado-desafio-full-stack",
+  "packageManager": "yarn@4.14.1",
+  "devDependencies": {
+    "@commitlint/cli": "^21.0.0",
+    "@commitlint/config-conventional": "^21.0.0",
+    "husky": "^9.1.7"
+  },
+  "scripts": {
+    "prepare": "husky"
+  }
+}
