@@ -1,10 +1,11 @@
 // @ts-check
 import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: ['eslint.config.mjs'],
   },
@@ -32,4 +33,20 @@ export default tseslint.config(
       "prettier/prettier": ["error", { endOfLine: "auto" }],
     },
   },
+  // Decorator-heavy files use libraries whose types are not fully resolvable
+  // by typescript-eslint. These rules are relaxed only for those files.
+  {
+    files: [
+      'src/**/*.controller.ts',
+      'src/**/*.dto.ts',
+      'src/**/*.entity.ts',
+      'src/**/*.module.ts',
+      'src/**/*.service.ts',
+    ],
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+    },
+  }
 );
