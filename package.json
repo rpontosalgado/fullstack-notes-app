@@ -20,11 +20,5 @@
   "workspaces": [
     "backend",
     "frontend"
-  ],
-  "dependencies": {
-    "@nestjs/swagger": "^11.4.2",
-    "@nestjs/typeorm": "^11.0.1",
-    "typeorm": "^0.3.29",
-    "uuid": "^14.0.0"
-  }
+  ]
 }
