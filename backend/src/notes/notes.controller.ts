@@ -1,7 +1,7 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { FilterNotesDto } from './dto/filter-notes.dto';
 import { NotesService } from './notes.service';
-import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { Note } from './note.entity';
 
 @Controller('api/v1/notes')
@@ -49,5 +49,14 @@ export class NotesController {
   })
   getAllNotes(@Query() filters: FilterNotesDto) {
     return this.notesService.getAllNotes(filters);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get a single note by ID' })
+  @ApiParam({ name: 'id', description: 'Note UUID' })
+  @ApiResponse({ status: 200, description: 'The note', type: Note })
+  @ApiResponse({ status: 404, description: 'Note not found' })
+  getNote(@Param('id', ParseUUIDPipe) id: string) {
+    return this.notesService.getNote(id);
   }
 }
