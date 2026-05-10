@@ -1,6 +1,6 @@
-import 'reflect-metadata';
 import * as fs from 'fs';
 import * as path from 'path';
+import 'reflect-metadata';
 import { Note } from '../notes/note.entity';
 import { AppDataSource } from './data-source';
 
@@ -55,7 +55,7 @@ async function seed(): Promise<void> {
     return;
   }
 
-  const csvPath = path.resolve(__dirname, '../../materials/notes.csv');
+  const csvPath = path.resolve(__dirname, '../../../materials/notes.csv');
   console.log(`Reading CSV from: ${csvPath}`);
 
   const records = parseCsv(csvPath);
