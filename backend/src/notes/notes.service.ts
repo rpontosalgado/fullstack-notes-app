@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Like, Repository } from 'typeorm';
 import { Note } from './note.entity';
@@ -9,9 +9,18 @@ export class NotesService {
   constructor(
     @InjectRepository(Note)
     private readonly notesRepository: Repository<Note>,
+    private readonly logger: Logger = new Logger(NotesService.name),
   ) {}
 
   async getAllNotes(filters: FilterNotesDto) {
+    this.logger.debug(
+      {
+        method: this.getAllNotes.name,
+        msg: `Getting all notes with filters: ${JSON.stringify(filters)}`,
+      },
+      NotesService.name,
+    );
+
     const {
       site,
       equipment,
@@ -46,6 +55,16 @@ export class NotesService {
       take: limit,
     });
 
+    this.logger.log(
+      {
+        method: this.getAllNotes.name,
+        msg: `Success: found ${data.length} notes (total: ${total})`,
+        filters: { site, equipment, startDate, endDate },
+        pagination: { page, limit },
+      },
+      NotesService.name,
+    );
+
     return {
       data,
       total,
@@ -56,10 +75,27 @@ export class NotesService {
   }
 
   async getNote(id: string): Promise<Note> {
+    this.logger.debug(
+      {
+        method: this.getNote.name,
+        msg: `Getting note with ID: ${id}`,
+      },
+      NotesService.name,
+    );
+
     const note = await this.notesRepository.findOne({ where: { id } });
     if (!note) {
       throw new NotFoundException(`Note with ID "${id}" not found`);
     }
+    this.logger.log(
+      {
+        method: this.getNote.name,
+        msg: `Success: found note with ID ${id}`,
+        result: note,
+      },
+      NotesService.name,
+    );
+
     return note;
   }
 }
