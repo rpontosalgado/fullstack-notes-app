@@ -1,73 +1,119 @@
-# React + TypeScript + Vite
+# Notes Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript + Vite frontend for the Notes management application.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Framework:** React 18
+- **Build tool:** Vite 5
+- **Language:** TypeScript
+- **Styling:** styled-components v6
+- **Font:** Sora (Google Fonts)
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js >= 18
+- Backend API running on `http://localhost:3000`
 
-## Expanding the ESLint configuration
+## Setup
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 1. Install dependencies
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Start the development server
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+The app will be available at `http://localhost:5173`.
+
+Vite proxies all `/api` requests to the backend at `http://localhost:3000`, so no CORS configuration is needed during development.
+
+### 3. Build for production
+
+```bash
+npm run build
+```
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── layout/
+│   │   └── sidebar/
+│   │       ├── styles/
+│   │       │   └── Sidebar.styles.ts
+│   │       └── Sidebar.tsx              # Navigation sidebar
+│   ├── notes/
+│   │   ├── createNoteModal/
+│   │   │   ├── styles/
+│   │   │   │   └── CreateNoteModal.styles.ts
+│   │   │   └── CreateNoteModal.tsx      # Modal form to create a new note
+│   │   ├── notesFilter/
+│   │   │   ├── styles/
+│   │   │   │   └── NotesFilter.styles.ts
+│   │   │   └── NotesFilter.tsx          # Filter bar (site, equipment, date range)
+│   │   ├── notesPage/
+│   │   │   ├── styles/
+│   │   │   │   └── NotesPage.styles.ts
+│   │   │   └── NotesPage.tsx            # Main notes page
+│   │   └── notesTable/
+│   │       ├── styles/
+│   │       │   └── NotesTable.styles.ts
+│   │       └── NotesTable.tsx           # Notes data table with skeleton loading
+│   └── ui/
+│       ├── icons/
+│       │   ├── index.ts                 # Barrel export for all icons
+│       │   ├── AnalyticsIcon.tsx
+│       │   ├── ChevronLeftIcon.tsx
+│       │   ├── ChevronRightIcon.tsx
+│       │   ├── DashboardIcon.tsx
+│       │   ├── DoubleArrowIcon.tsx
+│       │   ├── FilterIcon.tsx
+│       │   ├── HistoryIcon.tsx
+│       │   ├── HomeIcon.tsx
+│       │   ├── LogoIcon.tsx
+│       │   ├── LogsIcon.tsx
+│       │   ├── MapIcon.tsx
+│       │   ├── NotesIcon.tsx
+│       │   ├── PlusIcon.tsx
+│       │   └── XIcon.tsx
+│       └── pagination/
+│           ├── styles/
+│           │   └── Pagination.styles.ts
+│           └── Pagination.tsx           # Pagination control
+├── hooks/
+│   └── useNotes.ts                      # Data fetching, filtering and pagination state
+├── services/
+│   └── notesService.ts                  # API calls
+├── styles/
+│   ├── App.styles.ts                    # Root layout styled components
+│   ├── global.css                       # Base reset and global body styles
+│   ├── styled.d.ts                      # DefaultTheme declaration for styled-components
+│   └── theme.ts                         # Design tokens (colors, spacing, typography)
+├── types/
+│   └── notes.ts                         # TypeScript interfaces
+├── App.tsx
+└── main.tsx
+```
+
+## Styling
+
+Styles are managed with **styled-components**. The design tokens (colors, radius, font, sidebar width) are defined in `src/styles/theme.ts` and provided globally via `ThemeProvider` in `main.tsx`.
+
+The `DefaultTheme` interface is extended in `src/styles/styles.d.ts` so every styled component gets full TypeScript autocomplete on the `theme` prop with no extra configuration needed.
+
+Each component keeps its styled component definitions in a dedicated `styles/` subfolder alongside it, keeping component logic and style definitions cleanly separated.
+
+## Features
+
+- View all notes in a paginated table
+- Filter notes by site, equipment, and date range
+- Create new notes via a modal form
+- Skeleton loading state while fetching data
+- Fully typed theme with styled-components
