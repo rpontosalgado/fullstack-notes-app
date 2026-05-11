@@ -9,3 +9,5 @@ export { LogoIcon } from './LogoIcon';
 export { LogsIcon } from './LogsIcon';
 export { MapIcon } from './MapIcon';
 export { NotesIcon } from './NotesIcon';
+export { PlusIcon } from './PlusIcon';
+export { XIcon } from './XIcon';
