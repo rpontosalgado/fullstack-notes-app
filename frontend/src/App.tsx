@@ -1,4 +1,4 @@
-import { Layout, Main } from './styles/app.styles';
+import { Layout, Main } from './styles/App.styles';
 
 export default function App() {
   return (
