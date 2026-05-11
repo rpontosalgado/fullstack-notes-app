@@ -28,6 +28,7 @@ export const theme = {
     },
     bg: '#FAFAFA',
     white: '#ffffff',
+    black: '#000000',
   },
   sidebar: {
     width: '220px',
@@ -42,6 +43,6 @@ export const theme = {
     xl: '12px',
     full: '9999px',
   },
-} as const
+} as const;
 
-export type Theme = typeof theme
+export type Theme = typeof theme;
