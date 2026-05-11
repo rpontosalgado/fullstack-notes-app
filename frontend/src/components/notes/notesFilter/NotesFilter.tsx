@@ -9,7 +9,7 @@ import {
   FilterButton,
   Filters,
   Input,
-} from './styles/NotesFiltes.styles';
+} from './styles/NotesFilter.styles';
 import type { NotesFilters } from '../../../types/notes';
 
 interface NotesFilterProps {
