@@ -1,0 +1,29 @@
+Uso de Inteligência Artificial — Transparência
+
+Conforme solicitado, descrevo aqui como utilizei ferramentas de IA (especificamente o Claude, da Anthropic) durante o desenvolvimento deste desafio.
+
+A IA foi utilizada como uma ferramenta de auxílio ao longo do projeto, e não como autora do código. Todo o código gerado foi revisado, compreendido e, em vários momentos, corrigido ou adaptado por mim antes de ser integrado ao projeto. Assumo total responsabilidade pelo resultado final.
+
+---
+
+Como a IA foi utilizada
+
+De forma geral, usei a IA para acelerar partes do desenvolvimento onde o custo de pesquisa e experimentação seria alto dado o tempo disponível, e para discutir decisões técnicas ao longo do caminho.
+
+Alguns exemplos concretos:
+
+- **Estrutura inicial do backend:** Pedi ajuda para montar a estrutura base do projeto NestJS com TypeORM e PostgreSQL, incluindo a configuração do DataSource, os DTOs com validação e o controller. Isso me permitiu focar nas decisões de design da API em vez de gastar tempo com boilerplate.
+
+- **Seed script:** O parser de CSV foi gerado com auxílio da IA após tentativas com a biblioteca `csv-parse` resultarem em conflitos de tipagem com as regras de ESLint do projeto. A solução foi substituir a biblioteca por um parser manual tipado, o que resolveu os problemas sem precisar desabilitar as regras.
+
+- **Componentes de UI do frontend:** Optei por pedir à IA que elaborasse os componentes estilizados porque não tenho familiaridade com design systems além do proprietário que utilizava na empresa em que trabalhava anteriormente. Sem esse ponto de partida, adequar os estilos ao guia visual proposto no desafio seria consideravelmente mais difícil e demorado. Os componentes foram revisados e ajustados por mim para seguir as convenções de organização que adotei no projeto, como a separação dos styled components em arquivos próprios.
+
+- **Resolução de erros:** Em alguns momentos usei a IA para discutir erros específicos que apareceram durante o desenvolvimento, como problemas de tipagem com decorators do NestJS no ESLint e o padrão correto para chamadas assíncronas dentro de useEffect no React.
+
+- **Documentação:** Os arquivos README foram escritos com auxílio da IA, revisados e complementados com contexto pessoal e decisões que só eu tinha conhecimento, como as motivações por trás de cada escolha técnica.
+
+---
+
+Em todos os casos, a IA foi tratada como um par de programação — alguém com quem discutir abordagens, pedir uma primeira versão de algo ou buscar uma segunda opinião — e não como uma solução automática. As decisões de arquitetura, organização e qualidade final do projeto são minhas.
+
+Roberto de Abreu Salgado
