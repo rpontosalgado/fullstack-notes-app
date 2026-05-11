@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Like, Repository } from 'typeorm';
 import { Note } from './note.entity';
 import { FilterNotesDto } from './dto/filter-notes.dto';
+import { CreateNoteDto } from './dto/create-notes.dto';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class NotesService {
@@ -97,5 +99,33 @@ export class NotesService {
     );
 
     return note;
+  }
+
+  async createNote(createNoteDto: CreateNoteDto): Promise<Note> {
+    this.logger.debug(
+      {
+        method: this.createNote.name,
+        msg: `Creating note`,
+        data: createNoteDto,
+      },
+      NotesService.name,
+    );
+
+    const note = this.notesRepository.create({
+      id: uuidv4(),
+      ...createNoteDto,
+      timestamp: new Date(createNoteDto.timestamp),
+    });
+
+    this.logger.log(
+      {
+        method: this.createNote.name,
+        msg: `Note created successfully`,
+        result: note,
+      },
+      NotesService.name,
+    );
+
+    return this.notesRepository.save(note);
   }
 }

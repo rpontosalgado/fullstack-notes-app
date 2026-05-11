@@ -1,8 +1,19 @@
-import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { FilterNotesDto } from './dto/filter-notes.dto';
 import { NotesService } from './notes.service';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { Note } from './note.entity';
+import { CreateNoteDto } from './dto/create-notes.dto';
 
 @Controller('api/v1/notes')
 export class NotesController {
@@ -58,5 +69,18 @@ export class NotesController {
   @ApiResponse({ status: 404, description: 'Note not found' })
   getNote(@Param('id', ParseUUIDPipe) id: string) {
     return this.notesService.getNote(id);
+  }
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Create a new note' })
+  @ApiResponse({
+    status: 201,
+    description: 'Note created successfully',
+    type: Note,
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  create(@Body() createNoteDto: CreateNoteDto) {
+    return this.notesService.createNote(createNoteDto);
   }
 }
