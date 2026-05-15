@@ -1,4 +1,4 @@
-# Roberto de Abreu Salgado - Desafio Full Stack
+# Desafio Full Stack — Tela de Notas
 
 Olá, equipe! Me chamo **Roberto de Abreu Salgado** e este repositório contém minha solução para o desafio Full Stack. Foi uma experiência muito bacana trabalhar nele — tentei tomar decisões técnicas que refletissem não só o cumprimento dos requisitos, mas também a preocupação com organização, legibilidade e qualidade de código.
 
@@ -11,7 +11,8 @@ Abaixo explico como rodar o projeto, as escolhas que fiz e o que eu teria contin
 ```
 .
 ├── backend/    # API RESTful com NestJS + PostgreSQL
-└── frontend/   # Interface web com React + Vite
+├── frontend/   # Interface web com React + Vite
+└── materials/  # Dados iniciais (notes.csv)
 ```
 
 ---
@@ -29,15 +30,47 @@ Abaixo explico como rodar o projeto, as escolhas que fiz e o que eu teria contin
 ### Pré-requisitos
 
 - Node.js >= 18
+- Yarn 4
 - PostgreSQL rodando localmente
 
 ### Como rodar
+
+#### A. Com Docker (recomendado)
+
+A forma mais simples de rodar o backend é via Docker Compose, sem precisar configurar o PostgreSQL localmente.
+
+**Pré-requisitos**
+
+- Docker
+- Docker Compose
+
+**1. Suba os serviços**
+
+```bash
+docker-compose up --build
+```
+
+O seed é executado automaticamente ao iniciar o container, populando o banco com os dados do `materials/notes.csv`. A API estará disponível em `http://localhost:3000` e o Swagger em `http://localhost:3000/api/docs`.
+
+**2. Para encerrar**
+
+```bash
+docker-compose down
+```
+
+Para remover também o volume do banco de dados:
+
+```bash
+docker-compose down -v
+```
+
+#### B. Localmente
 
 **1. Instalar dependências**
 
 ```bash
 cd backend
-npm install
+yarn install
 ```
 
 **2. Configurar variáveis de ambiente**
@@ -66,7 +99,7 @@ CREATE DATABASE notes_db;
 **4. Popular o banco com os dados iniciais**
 
 ```bash
-npm run seed
+yarn seed
 ```
 
 O script lê o arquivo `materials/notes.csv` e insere os registros no banco. Caso o banco já tenha dados, o seed é ignorado automaticamente.
@@ -75,10 +108,10 @@ O script lê o arquivo `materials/notes.csv` e insere os registros no banco. Cas
 
 ```bash
 # Desenvolvimento (com hot-reload)
-npm run start:dev
+yarn start:dev
 
 # Produção
-npm run build && npm run start:prod
+yarn build && yarn start:prod
 ```
 
 ### Documentação da API
@@ -122,6 +155,7 @@ http://localhost:3000/api/docs
 ### Pré-requisitos
 
 - Node.js >= 18
+- Yarn 4
 - Backend rodando em `http://localhost:3000`
 
 ### Como rodar
@@ -130,13 +164,13 @@ http://localhost:3000/api/docs
 
 ```bash
 cd frontend
-npm install
+yarn install
 ```
 
 **2. Iniciar o servidor de desenvolvimento**
 
 ```bash
-npm run dev
+yarn dev
 ```
 
 A aplicação estará disponível em `http://localhost:5173`. O Vite está configurado para fazer proxy de todas as requisições `/api` para o backend, eliminando problemas de CORS durante o desenvolvimento.
@@ -144,7 +178,7 @@ A aplicação estará disponível em `http://localhost:5173`. O Vite está confi
 **3. Build para produção**
 
 ```bash
-npm run build
+yarn build
 ```
 
 ### Funcionalidades
@@ -165,10 +199,8 @@ Alguns pontos que ficaram fora do escopo por restrição de tempo, mas que consi
 **Backend**
 
 - **CRUD completo** — endpoints de `PUT /api/v1/notes/:id` e `DELETE /api/v1/notes/:id` já estavam planejados como requisitos opcionais
-- **Testes automatizados** — testes unitários nos serviços e testes de integração nos controllers com Jest e Supertest
 - **Migrations** — substituir o `synchronize: true` do TypeORM por migrations versionadas, mais adequado para ambientes de produção
 - **Variáveis de ambiente com validação** — usar o módulo `@nestjs/config` com validação via Joi ou Zod para garantir que o ambiente está corretamente configurado na inicialização
-- **Docker e Docker Compose** — containerizar a API e o banco de dados para facilitar a execução em qualquer ambiente sem dependências locais
 
 **Frontend**
 

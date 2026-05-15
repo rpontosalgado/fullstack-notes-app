@@ -1,35 +1,95 @@
-# Notes API - Backend
+# Backend — Notes API
 
-RESTful API built with **NestJS**, **TypeORM**, and **PostgreSQL** for managing notes.
+API RESTful construída com **NestJS**, **TypeORM** e **PostgreSQL** para gerenciamento de notas.
 
-## Tech Stack
+## Tecnologias
 
-- **Framework:** NestJS 10
-- **Database:** PostgreSQL
-- **ORM:** TypeORM
-- **Validation:** class-validator / class-transformer
-- **Documentation:** Swagger (OpenAPI)
+- **NestJS** — framework Node.js modular e opinado
+- **TypeORM** — ORM com suporte nativo a TypeScript
+- **PostgreSQL** — banco de dados relacional
+- **Swagger (OpenAPI)** — documentação interativa da API
+- **class-validator / class-transformer** — validação e transformação de dados
+- **Jest + Supertest** — testes unitários e de integração
+- **Docker + Docker Compose** — containerização da API e do banco de dados
 
-## Prerequisites
+## Estrutura do Projeto
 
-- Node.js >= 18
-- PostgreSQL running locally
-
-## Setup
-
-### 1. Install dependencies
-
-```bash
-npm install
+```
+backend/
+├── scripts/
+│   └── entrypoint.sh         # Script de inicialização do container
+├── src/
+│   ├── database/
+│   │   ├── data-source.ts    # Configuração do DataSource (TypeORM)
+│   │   └── seed.ts           # Script de carga inicial de dados
+│   └── notes/
+│       ├── dto/
+│       │   ├── create-note.dto.ts
+│       │   └── filter-notes.dto.ts
+│       ├── note.entity.ts
+│       ├── notes.controller.ts
+│       ├── notes.controller.spec.ts
+│       ├── notes.module.ts
+│       ├── notes.service.ts
+│       └── notes.service.spec.ts
+├── .env.example
+├── Dockerfile
+└── materials/
+    └── notes.csv             # Dados iniciais
 ```
 
-### 2. Configure environment variables
+## Como rodar
 
-Copy `.env.example` to `.env` and adjust the values:
+### A. Com Docker (recomendado)
+
+A forma mais simples de rodar o backend é via Docker Compose, sem precisar configurar o PostgreSQL localmente.
+
+**Pré-requisitos**
+
+- Docker
+- Docker Compose
+
+**1. Suba os serviços**
+
+```bash
+docker-compose up --build
+```
+
+O seed é executado automaticamente ao iniciar o container, populando o banco com os dados do `materials/notes.csv`. A API estará disponível em `http://localhost:3000` e o Swagger em `http://localhost:3000/api/docs`.
+
+**2. Para encerrar**
+
+```bash
+docker-compose down
+```
+
+Para remover também o volume do banco de dados:
+
+```bash
+docker-compose down -v
+```
+
+### B. Localmente
+
+**Pré-requisitos**
+
+- Node.js >= 18
+- Yarn 4
+- PostgreSQL rodando localmente
+
+**1. Instalar dependências**
+
+```bash
+yarn install
+```
+
+**2. Configurar variáveis de ambiente**
 
 ```bash
 cp .env.example .env
 ```
+
+Ajuste os valores conforme seu ambiente:
 
 ```env
 DB_HOST=localhost
@@ -40,62 +100,76 @@ DB_NAME=notes_db
 PORT=3000
 ```
 
-### 3. Create the database
-
-Connect to PostgreSQL and run:
+**3. Criar o banco de dados**
 
 ```sql
 CREATE DATABASE notes_db;
 ```
 
-### 4. Run the seed script
-
-Populates the database with the initial data from `materials/notes.csv`:
+**4. Popular o banco com os dados iniciais**
 
 ```bash
-npm run seed
+yarn seed
 ```
 
-### 5. Start the server
+O script lê `materials/notes.csv` e insere os registros no banco. Caso já existam dados, o seed é ignorado automaticamente.
+
+**5. Iniciar o servidor**
 
 ```bash
-# Development (with hot-reload)
-npm run start:dev
+# Desenvolvimento (com hot-reload)
+yarn start:dev
 
-# Production
-npm run build && npm run start:prod
+# Produção
+yarn build && yarn start:prod
 ```
 
-## API Documentation
+## Testes
 
-Swagger UI is available at:
+```bash
+# Rodar todos os testes
+yarn test
+
+# Rodar com cobertura
+yarn test:cov
+```
+
+## Documentação da API
+
+A documentação interativa via Swagger está disponível em:
 
 ```
 http://localhost:3000/api/docs
 ```
 
-## API Endpoints
+## Endpoints
+
+| Método | Rota                | Descrição                           |
+| ------ | ------------------- | ----------------------------------- |
+| `GET`  | `/api/v1/notes`     | Lista notas com filtros e paginação |
+| `GET`  | `/api/v1/notes/:id` | Busca uma nota pelo ID              |
+| `POST` | `/api/v1/notes`     | Cria uma nova nota                  |
 
 ### `GET /api/v1/notes`
 
-Returns a paginated list of notes. Supports optional query filters:
+Retorna uma lista paginada de notas. Suporta os seguintes filtros via query params:
 
-| Parameter   | Type   | Description                         |
-| ----------- | ------ | ----------------------------------- |
-| `site`      | string | Filter by site name (partial match) |
-| `equipment` | string | Filter by equipment (partial match) |
-| `startDate` | string | Start of date range (ISO 8601)      |
-| `endDate`   | string | End of date range (ISO 8601)        |
-| `page`      | number | Page number (default: 1)            |
-| `limit`     | number | Items per page (default: 10)        |
+| Parâmetro   | Tipo   | Descrição                                         |
+| ----------- | ------ | ------------------------------------------------- |
+| `site`      | string | Filtra por nome do site (correspondência parcial) |
+| `equipment` | string | Filtra por equipamento (correspondência parcial)  |
+| `startDate` | string | Início do período (ISO 8601)                      |
+| `endDate`   | string | Fim do período (ISO 8601)                         |
+| `page`      | number | Número da página (padrão: 1)                      |
+| `limit`     | number | Itens por página (padrão: 10)                     |
 
-**Example:**
+**Exemplo:**
 
 ```
 GET /api/v1/notes?site=Martins&equipment=Gerador&startDate=2024-01-01&endDate=2024-08-31&page=1&limit=10
 ```
 
-**Response:**
+**Resposta:**
 
 ```json
 {
@@ -109,13 +183,13 @@ GET /api/v1/notes?site=Martins&equipment=Gerador&startDate=2024-01-01&endDate=20
 
 ### `GET /api/v1/notes/:id`
 
-Returns a single note by UUID.
+Retorna uma nota pelo UUID. Retorna `404` caso não encontrada.
 
 ### `POST /api/v1/notes`
 
-Creates a new note.
+Cria uma nova nota.
 
-**Request body:**
+**Body:**
 
 ```json
 {
@@ -124,8 +198,8 @@ Creates a new note.
   "variable": "Tensão",
   "timestamp": "2024-08-01T18:48:37.381Z",
   "author": "Márcia Albuquerque",
-  "message": "Your note message here"
+  "message": "Conteúdo da nota"
 }
 ```
 
-**Response:** `201 Created` with the created note object.
+**Resposta:** `201 Created` com o objeto da nota criada.
