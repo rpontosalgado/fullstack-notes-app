@@ -3,7 +3,7 @@ FROM node:24-alpine3.21 AS builder
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock .yarnrc.yml ./
 COPY backend/package.json ./backend/package.json
 COPY frontend/package.json ./frontend/package.json
 RUN corepack enable && yarn install --immutable
@@ -17,7 +17,7 @@ FROM node:24-alpine3.21 AS production
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock .yarnrc.yml ./
 COPY backend/package.json ./backend/package.json
 COPY frontend/package.json ./frontend/package.json
 RUN corepack enable && yarn workspaces focus @roberto-de-abreu-salgado-desafio-full-stack/backend --production
