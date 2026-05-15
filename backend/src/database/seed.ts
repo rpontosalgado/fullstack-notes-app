@@ -55,7 +55,7 @@ async function seed(): Promise<void> {
     return;
   }
 
-  const csvPath = path.resolve(__dirname, '../../../materials/notes.csv');
+  const csvPath = path.resolve(process.cwd(), 'materials/notes.csv');
   console.log(`Reading CSV from: ${csvPath}`);
 
   const records = parseCsv(csvPath);
