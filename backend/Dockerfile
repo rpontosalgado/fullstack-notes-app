@@ -24,7 +24,9 @@ RUN corepack enable && yarn workspaces focus @roberto-de-abreu-salgado-desafio-f
 
 COPY --from=builder /app/backend/dist ./dist
 COPY --from=builder /app/materials ./materials
+COPY backend/scripts/entrypoint.sh ./scripts/entrypoint.sh
+RUN chmod +x scripts/entrypoint.sh
 
 EXPOSE 3000
 
-CMD ["node", "dist/main"]
+CMD ["./scripts/entrypoint.sh"]
