@@ -2,24 +2,25 @@
 FROM node:24-alpine3.21 AS builder
 
 WORKDIR /app
- 
-RUN corepack enable
 
-COPY backend/package.json yarn.lock ./
-RUN yarn install
- 
-COPY . .
+COPY package.json yarn.lock ./
+COPY backend/package.json ./backend/package.json
+COPY frontend/package.json ./frontend/package.json
+RUN corepack enable && yarn install --immutable
+
+COPY backend/ ./backend
+COPY materials/ ./materials
 RUN yarn backend/build
 
 # Production stage
 FROM node:24-alpine3.21 AS production
 
 WORKDIR /app
- 
-RUN corepack enable
 
-COPY backend/package.json yarn.lock ./
-RUN yarn install --production
+COPY package.json yarn.lock ./
+COPY backend/package.json ./backend/package.json
+COPY frontend/package.json ./frontend/package.json
+RUN corepack enable && yarn workspaces focus @roberto-de-abreu-salgado-desafio-full-stack/backend --production
 
 COPY --from=builder /app/backend/dist ./dist
 COPY --from=builder /app/materials ./materials
