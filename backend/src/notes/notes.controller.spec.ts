@@ -27,6 +27,8 @@ const mockNotesService = {
   getAllNotes: jest.fn(),
   getNote: jest.fn(),
   createNote: jest.fn(),
+  updateNote: jest.fn(),
+  deleteNote: jest.fn(),
 };
 
 describe('NotesController (integration)', () => {
@@ -65,7 +67,7 @@ describe('NotesController (integration)', () => {
 
       const response = await request(app.getHttpServer() as Server)
         .get('/api/v1/notes')
-        .expect((res) => console.log(res.body));
+        .expect(200);
 
       expect(response.body).toEqual(mockPaginatedResult);
       expect(mockNotesService.getAllNotes).toHaveBeenCalledTimes(1);
@@ -134,14 +136,10 @@ describe('NotesController (integration)', () => {
       expect(response.body).toEqual(mockNote);
     });
 
-    it('should return 404 when note is not found', async () => {
-      mockNotesService.getNote.mockRejectedValue(
-        Object.assign(new Error('Not found'), { status: 404 }),
-      );
-
+    it('should return 400 when id is not a valid uuid', async () => {
       await request(app.getHttpServer() as Server)
         .get('/api/v1/notes/non-existent-id')
-        .expect(400); // 400 because uuid pipe rejects invalid uuid format
+        .expect(400);
     });
   });
 
@@ -192,6 +190,73 @@ describe('NotesController (integration)', () => {
         .expect(400);
 
       expect(mockNotesService.createNote).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('PUT /api/v1/notes/:id', () => {
+    const updatePayload = { message: 'Mensagem atualizada' };
+    const updatedNote = { ...mockNote, message: 'Mensagem atualizada' };
+
+    it('should update and return the note', async () => {
+      mockNotesService.updateNote.mockResolvedValue(updatedNote);
+
+      const response = await request(app.getHttpServer() as Server)
+        .put(`/api/v1/notes/${mockNote.id}`)
+        .send(updatePayload)
+        .expect(200);
+
+      expect(response.body).toEqual(updatedNote);
+      expect(mockNotesService.updateNote).toHaveBeenCalledWith(
+        mockNote.id,
+        updatePayload,
+      );
+    });
+
+    it('should return 400 when id is not a valid uuid', async () => {
+      await request(app.getHttpServer() as Server)
+        .put('/api/v1/notes/non-existent-id')
+        .send(updatePayload)
+        .expect(400);
+
+      expect(mockNotesService.updateNote).not.toHaveBeenCalled();
+    });
+
+    it('should return 400 when extra fields are sent', async () => {
+      await request(app.getHttpServer() as Server)
+        .put(`/api/v1/notes/${mockNote.id}`)
+        .send({ ...updatePayload, unexpectedField: 'value' })
+        .expect(400);
+
+      expect(mockNotesService.updateNote).not.toHaveBeenCalled();
+    });
+
+    it('should return 400 when timestamp is not a valid date', async () => {
+      await request(app.getHttpServer() as Server)
+        .put(`/api/v1/notes/${mockNote.id}`)
+        .send({ timestamp: 'not-a-date' })
+        .expect(400);
+
+      expect(mockNotesService.updateNote).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('DELETE /api/v1/notes/:id', () => {
+    it('should delete the note and return 204', async () => {
+      mockNotesService.deleteNote.mockResolvedValue(undefined);
+
+      await request(app.getHttpServer() as Server)
+        .delete(`/api/v1/notes/${mockNote.id}`)
+        .expect(204);
+
+      expect(mockNotesService.deleteNote).toHaveBeenCalledWith(mockNote.id);
+    });
+
+    it('should return 400 when id is not a valid uuid', async () => {
+      await request(app.getHttpServer() as Server)
+        .delete('/api/v1/notes/non-existent-id')
+        .expect(400);
+
+      expect(mockNotesService.deleteNote).not.toHaveBeenCalled();
     });
   });
 });

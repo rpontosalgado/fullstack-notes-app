@@ -28,6 +28,8 @@ const mockRepository = {
   findOne: jest.fn(),
   create: jest.fn(),
   save: jest.fn(),
+  merge: jest.fn(),
+  remove: jest.fn(),
 };
 
 describe('NotesService', () => {
@@ -183,6 +185,72 @@ describe('NotesService', () => {
         }),
       );
       expect(repository.save).toHaveBeenCalledWith(mockNote);
+    });
+  });
+
+  describe('updateNote', () => {
+    it('should update and return the note', async () => {
+      const updateDto = { message: 'Mensagem atualizada' };
+      const updatedNote = { ...mockNote, message: 'Mensagem atualizada' };
+
+      mockRepository.findOne.mockResolvedValue(mockNote);
+      mockRepository.merge.mockReturnValue(updatedNote);
+      mockRepository.save.mockResolvedValue(updatedNote);
+
+      const result = await service.updateNote(mockNote.id, updateDto);
+
+      expect(result).toEqual(updatedNote);
+      expect(repository.merge).toHaveBeenCalledWith(
+        mockNote,
+        expect.objectContaining({ message: 'Mensagem atualizada' }),
+      );
+      expect(repository.save).toHaveBeenCalledWith(updatedNote);
+    });
+
+    it('should throw NotFoundException when note does not exist', async () => {
+      mockRepository.findOne.mockResolvedValue(null);
+
+      await expect(
+        service.updateNote('non-existent-id', { message: 'Teste' }),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should convert timestamp string to Date when provided', async () => {
+      const updateDto = { timestamp: '2024-06-01T12:00:00.000Z' };
+      const updatedNote = {
+        ...mockNote,
+        timestamp: new Date(updateDto.timestamp),
+      };
+
+      mockRepository.findOne.mockResolvedValue(mockNote);
+      mockRepository.merge.mockReturnValue(updatedNote);
+      mockRepository.save.mockResolvedValue(updatedNote);
+
+      await service.updateNote(mockNote.id, updateDto);
+
+      expect(repository.merge).toHaveBeenCalledWith(
+        mockNote,
+        expect.objectContaining({ timestamp: new Date(updateDto.timestamp) }),
+      );
+    });
+  });
+
+  describe('deleteNote', () => {
+    it('should delete the note successfully', async () => {
+      mockRepository.findOne.mockResolvedValue(mockNote);
+      mockRepository.remove.mockResolvedValue(mockNote);
+
+      await service.deleteNote(mockNote.id);
+
+      expect(repository.remove).toHaveBeenCalledWith(mockNote);
+    });
+
+    it('should throw NotFoundException when note does not exist', async () => {
+      mockRepository.findOne.mockResolvedValue(null);
+
+      await expect(service.deleteNote('non-existent-id')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });
