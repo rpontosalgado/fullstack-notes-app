@@ -13,7 +13,9 @@ import { NotesModule } from './notes/notes.module';
       password: process.env.DB_PASSWORD ?? 'postgres',
       database: process.env.DB_NAME ?? 'notes_db',
       entities: [Note],
-      synchronize: true, // Auto-creates tables in dev; use migration in prod
+      migrations: ['dist/database/migrations/*.js'],
+      migrationsRun: true,
+      synchronize: false,
     }),
     NotesModule,
   ],
