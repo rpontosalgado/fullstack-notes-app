@@ -1,20 +1,30 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { FilterNotesDto } from './dto/filter-notes.dto';
-import { NotesService } from './notes.service';
-import { ApiOperation, ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
-import { Note } from './note.entity';
 import { CreateNoteDto } from './dto/create-notes.dto';
+import { UpdateNoteDto } from './dto/update-note.dto';
+import { NotesService } from './notes.service';
+import { Note } from './note.entity';
 
+@ApiTags('notes')
 @Controller('api/v1/notes')
 export class NotesController {
   constructor(private readonly notesService: NotesService) {}
@@ -28,11 +38,7 @@ export class NotesController {
     description: 'Paginated list of notes',
     type: Note,
   })
-  @ApiQuery({
-    name: 'site',
-    required: false,
-    description: 'Filter by equipment',
-  })
+  @ApiQuery({ name: 'site', required: false, description: 'Filter by site' })
   @ApiQuery({
     name: 'equipment',
     required: false,
@@ -80,7 +86,34 @@ export class NotesController {
     type: Note,
   })
   @ApiResponse({ status: 400, description: 'Validation error' })
-  create(@Body() createNoteDto: CreateNoteDto) {
+  createNote(@Body() createNoteDto: CreateNoteDto) {
     return this.notesService.createNote(createNoteDto);
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'Update an existing note' })
+  @ApiParam({ name: 'id', description: 'Note UUID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Note updated successfully',
+    type: Note,
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 404, description: 'Note not found' })
+  updateNote(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateNoteDto: UpdateNoteDto,
+  ) {
+    return this.notesService.updateNote(id, updateNoteDto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete a note' })
+  @ApiParam({ name: 'id', description: 'Note UUID' })
+  @ApiResponse({ status: 204, description: 'Note deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Note not found' })
+  deleteNote(@Param('id', ParseUUIDPipe) id: string) {
+    return this.notesService.deleteNote(id);
   }
 }

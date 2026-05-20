@@ -4,6 +4,7 @@ import { Between, Like, Repository } from 'typeorm';
 import { Note } from './note.entity';
 import { FilterNotesDto } from './dto/filter-notes.dto';
 import { CreateNoteDto } from './dto/create-notes.dto';
+import { UpdateNoteDto } from './dto/update-note.dto';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -45,7 +46,6 @@ export class NotesService {
     if (startDate || endDate) {
       const start = startDate ? new Date(startDate) : new Date('1970-01-01');
       const end = endDate ? new Date(endDate) : new Date();
-      // Set end date to end of day
       end.setHours(23, 59, 59, 999);
       where.timestamp = Between(start, end);
     }
@@ -89,6 +89,7 @@ export class NotesService {
     if (!note) {
       throw new NotFoundException(`Note with ID "${id}" not found`);
     }
+
     this.logger.log(
       {
         method: this.getNote.name,
@@ -117,15 +118,72 @@ export class NotesService {
       timestamp: new Date(createNoteDto.timestamp),
     });
 
+    const saved = await this.notesRepository.save(note);
+
     this.logger.log(
       {
         method: this.createNote.name,
         msg: `Note created successfully`,
-        result: note,
+        result: saved,
       },
       NotesService.name,
     );
 
-    return this.notesRepository.save(note);
+    return saved;
+  }
+
+  async updateNote(id: string, updateNoteDto: UpdateNoteDto): Promise<Note> {
+    this.logger.debug(
+      {
+        method: this.updateNote.name,
+        msg: `Updating note with ID: ${id}`,
+        data: updateNoteDto,
+      },
+      NotesService.name,
+    );
+
+    const note = await this.getNote(id);
+
+    const updated = this.notesRepository.merge(note, {
+      ...updateNoteDto,
+      ...(updateNoteDto.timestamp && {
+        timestamp: new Date(updateNoteDto.timestamp),
+      }),
+    });
+
+    const saved = await this.notesRepository.save(updated);
+
+    this.logger.log(
+      {
+        method: this.updateNote.name,
+        msg: `Note updated successfully`,
+        result: saved,
+      },
+      NotesService.name,
+    );
+
+    return saved;
+  }
+
+  async deleteNote(id: string): Promise<void> {
+    this.logger.debug(
+      {
+        method: this.deleteNote.name,
+        msg: `Deleting note with ID: ${id}`,
+      },
+      NotesService.name,
+    );
+
+    const note = await this.getNote(id);
+    await this.notesRepository.remove(note);
+
+    this.logger.log(
+      {
+        method: this.deleteNote.name,
+        msg: `Note deleted successfully`,
+        id,
+      },
+      NotesService.name,
+    );
   }
 }
