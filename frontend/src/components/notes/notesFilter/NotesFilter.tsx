@@ -1,15 +1,9 @@
 import { useState } from 'react';
 import { FilterIcon } from '../../ui/icons';
-import {
-  Actions,
-  ClearButton,
-  DateRange,
-  DateSeparator,
-  FilterBar,
-  FilterButton,
-  Filters,
-  Input,
-} from './styles/NotesFilter.styles';
+import { Flex } from '../../ui/flex/Flex';
+import { Typography } from '../../ui/typography/Typography';
+import { TextInput } from '../../ui/textInput/TextInput';
+import { Button } from '../../ui/button/Button';
 import type { NotesFilters } from '../../../types/notes';
 
 interface NotesFilterProps {
@@ -40,42 +34,48 @@ export function NotesFilter({ onFilter }: NotesFilterProps) {
   }
 
   return (
-    <FilterBar>
-      <Filters>
-        <Input
+    <Flex $align="center" $gap={12} $wrap>
+      <Flex $align="center" $gap={10} $flex={1} $wrap>
+        <TextInput
           type="text"
           placeholder="Selecione um site"
           value={site}
           onChange={(e) => setSite(e.target.value)}
+          style={{ minWidth: 160 }}
         />
-        <Input
+        <TextInput
           type="text"
           placeholder="Selecione um equipamento"
           value={equipment}
           onChange={(e) => setEquipment(e.target.value)}
+          style={{ minWidth: 160 }}
         />
-        <DateRange>
-          <Input
+        <Flex $align="center" $gap={8}>
+          <TextInput
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
+            style={{ minWidth: 140 }}
           />
-          <DateSeparator>até</DateSeparator>
-          <Input
+          <Typography $variant="caption">ate</Typography>
+          <TextInput
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
+            style={{ minWidth: 140 }}
           />
-        </DateRange>
-      </Filters>
+        </Flex>
+      </Flex>
 
-      <Actions>
-        <ClearButton onClick={handleClear}>Limpar</ClearButton>
-        <FilterButton onClick={handleFilter}>
+      <Flex $align="center" $gap={8}>
+        <Button $variant="secondary" type="button" onClick={handleClear}>
+          Limpar
+        </Button>
+        <Button type="button" onClick={handleFilter}>
           <FilterIcon />
           Filtrar
-        </FilterButton>
-      </Actions>
-    </FilterBar>
+        </Button>
+      </Flex>
+    </Flex>
   );
 }
