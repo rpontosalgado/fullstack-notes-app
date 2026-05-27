@@ -1,9 +1,10 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '../icons';
+import { Flex } from '../flex/Flex';
+import { Typography } from '../typography/Typography';
 import {
   Ellipsis,
   NavButton,
   PageButton,
-  PaginationWrapper,
 } from './styles/Pagination.styles';
 
 interface PaginationProps {
@@ -38,7 +39,7 @@ export function Pagination({
   }
 
   return (
-    <PaginationWrapper>
+    <Flex $align="center" $justify="center" $gap={4}>
       <NavButton
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
@@ -48,7 +49,9 @@ export function Pagination({
 
       {pages.map((page, i) =>
         page === '...' ? (
-          <Ellipsis key={`ellipsis-${i}`}>...</Ellipsis>
+          <Ellipsis key={`ellipsis-${i}`}>
+            <Typography $variant="caption">...</Typography>
+          </Ellipsis>
         ) : (
           <PageButton
             key={page}
@@ -66,6 +69,6 @@ export function Pagination({
       >
         <ChevronRightIcon />
       </NavButton>
-    </PaginationWrapper>
+    </Flex>
   );
 }
