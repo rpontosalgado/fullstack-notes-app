@@ -1,10 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
-import { fetchNotes, createNote } from '../services/notesService';
+import {
+  createNote,
+  deleteNote,
+  fetchNotes,
+  updateNote,
+} from '../services/notesService';
 import type {
   CreateNotePayload,
   Note,
   NotesFilters,
   PaginatedResponse,
+  UpdateNotePayload,
 } from '../types/notes';
 
 const ITEMS_PER_PAGE = 10;
@@ -56,5 +62,31 @@ export function useNotes() {
     [filters, loadNotes],
   );
 
-  return { data, loading, error, filters, applyFilters, goToPage, addNote };
+  const editNote = useCallback(
+    async (id: string, payload: UpdateNotePayload): Promise<void> => {
+      await updateNote(id, payload);
+      await loadNotes(filters);
+    },
+    [filters, loadNotes],
+  );
+
+  const removeNote = useCallback(
+    async (id: string): Promise<void> => {
+      await deleteNote(id);
+      await loadNotes(filters);
+    },
+    [filters, loadNotes],
+  );
+
+  return {
+    data,
+    loading,
+    error,
+    filters,
+    applyFilters,
+    goToPage,
+    addNote,
+    editNote,
+    removeNote,
+  };
 }

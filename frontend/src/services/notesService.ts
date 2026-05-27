@@ -3,6 +3,7 @@ import type {
   Note,
   NotesFilters,
   PaginatedResponse,
+  UpdateNotePayload,
 } from '../types/notes';
 
 const BASE_URL = '/api/v1';
@@ -45,4 +46,31 @@ export async function createNote(payload: CreateNotePayload): Promise<Note> {
   }
 
   return response.json() as Promise<Note>;
+}
+
+export async function updateNote(
+  id: string,
+  payload: UpdateNotePayload,
+): Promise<Note> {
+  const response = await fetch(`${BASE_URL}/notes/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to update note: ${response.statusText}`);
+  }
+
+  return response.json() as Promise<Note>;
+}
+
+export async function deleteNote(id: string): Promise<void> {
+  const response = await fetch(`${BASE_URL}/notes/${id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete note: ${response.statusText}`);
+  }
 }

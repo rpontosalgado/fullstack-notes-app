@@ -33,3 +33,12 @@ export interface CreateNotePayload {
   author: string;
   message: string;
 }
+
+export interface UpdateNotePayload {
+  site?: string;
+  equipment?: string;
+  variable?: string;
+  timestamp?: string;
+  author?: string;
+  message?: string;
+}
