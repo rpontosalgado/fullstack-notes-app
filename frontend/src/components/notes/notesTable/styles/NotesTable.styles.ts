@@ -82,3 +82,7 @@ export const Skeleton = styled.div`
   border-radius: ${({ theme }) => theme.radius.sm};
   width: 80%;
 `;
+
+export const ActionsTd = styled(Td)`
+  white-space: nowrap;
+`;
