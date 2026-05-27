@@ -1,5 +1,4 @@
 import type { JSX } from 'react';
-import 'styled-components';
 import {
   AnalyticsIcon,
   DashboardIcon,
@@ -10,21 +9,15 @@ import {
   MapIcon,
   NotesIcon,
 } from '../../ui/icons';
+import { Flex } from '../../ui/flex/Flex';
+import { Typography } from '../../ui/typography/Typography';
+import { Badge } from '../../ui/badge/Badge';
 import {
   Divider,
-  Footer,
-  FooterCopy,
-  Logo,
-  Nav,
   NavButton,
   NavIcon,
-  NavLabel,
   NavList,
-  NavSection,
   SidebarWrapper,
-  User,
-  UserAvatar,
-  UserName,
 } from './styles/Sidebar.styles';
 
 interface NavItem {
@@ -37,7 +30,7 @@ const mainNavItems: NavItem[] = [
   { icon: <HomeIcon />, label: 'Home' },
   { icon: <AnalyticsIcon />, label: 'Analytics' },
   { icon: <NotesIcon />, label: 'Notas', active: true },
-  { icon: <HistoryIcon />, label: 'Histórico' },
+  { icon: <HistoryIcon />, label: 'Historico' },
   { icon: <MapIcon />, label: 'Mapa' },
   { icon: <DashboardIcon />, label: 'Dashboard' },
 ];
@@ -47,13 +40,15 @@ const optionNavItems: NavItem[] = [{ icon: <LogsIcon />, label: 'Logs' }];
 export const Sidebar = () => {
   return (
     <SidebarWrapper>
-      <Logo>
+      <div style={{ padding: '24px 20px 64px', alignSelf: 'center' }}>
         <LogoIcon />
-      </Logo>
+      </div>
 
-      <Nav>
-        <NavSection>
-          <NavLabel>Menu Principal</NavLabel>
+      <Flex as="nav" $direction="column" $gap={24} $flex={1} $padding="16px 0" style={{ overflowY: 'auto' }}>
+        <Flex $direction="column" $gap={4}>
+          <div style={{ padding: '0 20px', marginBottom: 4 }}>
+            <Typography $variant="h3">Menu Principal</Typography>
+          </div>
           <NavList>
             {mainNavItems.map((item) => (
               <li key={item.label}>
@@ -64,12 +59,14 @@ export const Sidebar = () => {
               </li>
             ))}
           </NavList>
-        </NavSection>
+        </Flex>
 
         <Divider />
 
-        <NavSection>
-          <NavLabel>Opções</NavLabel>
+        <Flex $direction="column" $gap={4}>
+          <div style={{ padding: '0 20px', marginBottom: 4 }}>
+            <Typography $variant="h3">Opcoes</Typography>
+          </div>
           <NavList>
             {optionNavItems.map((item) => (
               <li key={item.label}>
@@ -80,16 +77,25 @@ export const Sidebar = () => {
               </li>
             ))}
           </NavList>
-        </NavSection>
-      </Nav>
+        </Flex>
+      </Flex>
 
-      <Footer>
-        <FooterCopy>© 2024 Enterpriseipsum | v1.0.0</FooterCopy>
-        <User>
-          <UserAvatar>EG</UserAvatar>
-          <UserName>Elias EG</UserName>
-        </User>
-      </Footer>
+      <Flex
+        $direction="column"
+        $gap={12}
+        $padding="16px 20px"
+        style={{ borderTop: '1px solid #393939' }}
+      >
+        <Typography $variant="caption">
+          &copy; 2024 Notes App | v1.0.0
+        </Typography>
+        <Flex $align="center" $gap={10}>
+          <Badge $size="md">JD</Badge>
+          <Typography $variant="body" style={{ color: '#E7E7E7' }}>
+            John Doe
+          </Typography>
+        </Flex>
+      </Flex>
     </SidebarWrapper>
   );
 };

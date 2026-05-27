@@ -7,14 +7,22 @@ export const LogoIcon = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <rect x="3" y="4" width="28" height="31" rx="3" fill="#d94343" />
       <path
-        d="M16.4992 2H37.5808L22.0816 24.9729H1L16.4992 2Z"
-        fill="#42A566"
+        d="M13 15h8M13 20h8M13 25h5"
+        stroke="white"
+        strokeWidth="2.5"
+        strokeLinecap="round"
       />
+      <circle cx="41" cy="21" r="14" fill="#b83232" />
       <path
-        d="M17.4226 27.1022L11.4194 36.0002H33.501L49.0002 13.0273H32.7026L23.2066 27.1022H17.4226Z"
-        fill="#328751"
+        d="M37 21l3 3 6-6"
+        stroke="white"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
 };
+
