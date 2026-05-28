@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   createNote,
   deleteNote,
+  exportNotes,
   fetchNotes,
   updateNote,
 } from '../services/notesService';
@@ -78,6 +79,12 @@ export function useNotes() {
     [filters, loadNotes],
   );
 
+  const exportAll = useCallback(async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { page, limit, ...filterValues } = filters;
+    return exportNotes(filterValues);
+  }, [filters]);
+
   return {
     data,
     loading,
@@ -88,5 +95,6 @@ export function useNotes() {
     addNote,
     editNote,
     removeNote,
+    exportAll,
   };
 }

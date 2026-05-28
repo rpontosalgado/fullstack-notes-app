@@ -59,10 +59,16 @@ export function NotesPage() {
     addNote,
     editNote,
     removeNote,
+    exportAll,
   } = useNotes();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | null>(null);
   const [deletingNote, setDeletingNote] = useState<Note | null>(null);
+
+  async function handleExport() {
+    const notes = await exportAll();
+    exportToCSV(notes);
+  }
 
   return (
     <Flex $direction="column" $align="stretch" $gap={20} $fullHeight>
@@ -70,7 +76,7 @@ export function NotesPage() {
         <Typography $variant="h1">Notas</Typography>
         <Flex $gap={10}>
           {data && data.data.length > 0 && (
-            <Button $variant="secondary" $size="md" onClick={() => exportToCSV(data.data)}>
+            <Button $variant="secondary" $size="md" onClick={handleExport}>
               <DownloadIcon />
               Exportar CSV
             </Button>

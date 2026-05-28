@@ -34,6 +34,20 @@ export async function fetchNotes(
   return response.json() as Promise<PaginatedResponse<Note>>;
 }
 
+export async function exportNotes(
+  filters: Omit<NotesFilters, 'page' | 'limit'>,
+): Promise<Note[]> {
+  const qs = buildQueryString({ ...filters, limit: 9999 });
+  const response = await fetch(`${BASE_URL}/notes?${qs}`);
+
+  if (!response.ok) {
+    throw new Error(`Failed to export notes: ${response.statusText}`);
+  }
+
+  const json = (await response.json()) as PaginatedResponse<Note>;
+  return json.data;
+}
+
 export async function createNote(payload: CreateNotePayload): Promise<Note> {
   const response = await fetch(`${BASE_URL}/notes`, {
     method: 'POST',

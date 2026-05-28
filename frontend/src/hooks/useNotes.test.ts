@@ -9,6 +9,7 @@ const mockFetchNotes = vi.mocked(notesService.fetchNotes);
 const mockCreateNote = vi.mocked(notesService.createNote);
 const mockUpdateNote = vi.mocked(notesService.updateNote);
 const mockDeleteNote = vi.mocked(notesService.deleteNote);
+const mockExportNotes = vi.mocked(notesService.exportNotes);
 
 const paginatedResponse = {
   data: [
@@ -129,4 +130,32 @@ describe('useNotes', () => {
     expect(mockDeleteNote).toHaveBeenCalledWith('1');
     expect(mockFetchNotes).toHaveBeenCalled();
   });
+
+  it('exportAll calls exportNotes with filter values (excluding page/limit)', async () => {
+    const allNotes = [
+      { id: '1', site: 'A', equipment: 'B', variable: 'C', timestamp: '2024-01-01T00:00:00Z', author: 'D', message: 'E' },
+      { id: '2', site: 'F', equipment: 'G', variable: 'H', timestamp: '2024-01-02T00:00:00Z', author: 'I', message: 'J' },
+    ];
+    mockExportNotes.mockResolvedValue(allNotes);
+
+    const { result } = renderHook(() => useNotes());
+    await waitFor(() => expect(result.current.loading).toBe(false), {
+      timeout: 3000,
+    });
+
+    act(() => result.current.applyFilters({ site: 'Test', equipment: 'Bomba' }));
+    await waitFor(() => expect(result.current.loading).toBe(false), {
+      timeout: 3000,
+    });
+
+    mockExportNotes.mockClear();
+    let exported: typeof allNotes | undefined;
+    await act(async () => {
+      exported = await result.current.exportAll();
+    });
+
+    expect(mockExportNotes).toHaveBeenCalledWith({ site: 'Test', equipment: 'Bomba' });
+    expect(exported).toEqual(allNotes);
+  });
 });
+
