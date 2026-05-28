@@ -1,9 +1,14 @@
+import styled from 'styled-components';
+
+const Svg = styled.svg`
+  width: 55px;
+  height: auto;
+`;
+
 export const LogoIcon = () => {
   return (
-    <svg
-      width="50"
-      height="39"
-      viewBox="0 0 50 39"
+    <Svg
+      viewBox="0 0 60 39"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -14,15 +19,15 @@ export const LogoIcon = () => {
         strokeWidth="2.5"
         strokeLinecap="round"
       />
-      <circle cx="41" cy="21" r="14" fill="#b83232" />
+      <circle cx="43" cy="21" r="13" fill="#b83232" />
       <path
-        d="M37 21l3 3 6-6"
+        d="M39 21l3 3 6-6"
         stroke="white"
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-    </svg>
+    </Svg>
   );
 };
 
