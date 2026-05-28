@@ -47,7 +47,7 @@ export function NoteForm({
   }
 
   return (
-    <Flex as="form" $direction="column" $gap={16} onSubmit={handleSubmit}>
+    <Flex as="form" $direction="column" $align="stretch" $gap={16} onSubmit={handleSubmit}>
       <Flex $gap={12} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
         <FormField
           label="Site"

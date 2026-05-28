@@ -65,7 +65,7 @@ export function NotesPage() {
   const [deletingNote, setDeletingNote] = useState<Note | null>(null);
 
   return (
-    <Flex $direction="column" $gap={20} $fullHeight>
+    <Flex $direction="column" $align="stretch" $gap={20} $fullHeight>
       <Flex $align="center" $justify="space-between">
         <Typography $variant="h1">Notas</Typography>
         <Flex $gap={10}>

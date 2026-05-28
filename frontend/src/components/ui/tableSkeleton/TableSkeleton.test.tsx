@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/react';
+
 import { TableSkeleton } from './TableSkeleton';
 import { renderWithTheme } from '../../../test/renderWithTheme';
 

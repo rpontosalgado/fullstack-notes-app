@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/react';
+
 import { TextInput } from './TextInput';
 import { Textarea } from '../textarea/Textarea';
 import { renderWithTheme } from '../../../test/renderWithTheme';
