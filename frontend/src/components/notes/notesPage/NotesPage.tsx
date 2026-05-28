@@ -82,7 +82,7 @@ export function NotesPage() {
         </Flex>
       </Flex>
 
-      <Card $padding={16}>
+      <Card $padding={16} style={{ alignSelf: 'start' }}>
         <NotesFilter onFilter={applyFilters} />
       </Card>
 
