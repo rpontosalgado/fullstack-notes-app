@@ -1,43 +1,31 @@
 # Notes Frontend
 
-React + TypeScript + Vite frontend for the Notes management application.
+React + TypeScript + Vite SPA for the Notes management application.
 
 ## Tech Stack
 
-- **Framework:** React 18
-- **Build tool:** Vite 5
-- **Language:** TypeScript
-- **Styling:** styled-components v6
-- **Font:** Sora (Google Fonts)
+- **React 19** with **TypeScript**
+- **Vite** — build tool with fast HMR
+- **styled-components v6** — CSS-in-JS with `DefaultTheme` typing
+- **Vitest** + **Testing Library** — unit and component testing
+- **Sora** (Google Fonts)
 
 ## Prerequisites
 
 - Node.js >= 18
+- Yarn 4
 - Backend API running on `http://localhost:3000`
 
 ## Setup
 
-### 1. Install dependencies
-
 ```bash
-npm install
+yarn install
+yarn dev      # http://localhost:5173
+yarn build    # production build to dist/
+yarn test     # run 87 component/hook/utility tests
 ```
 
-### 2. Start the development server
-
-```bash
-npm run dev
-```
-
-The app will be available at `http://localhost:5173`.
-
-Vite proxies all `/api` requests to the backend at `http://localhost:3000`, so no CORS configuration is needed during development.
-
-### 3. Build for production
-
-```bash
-npm run build
-```
+Vite proxies `/api` requests to `http://localhost:3000`.
 
 ## Project Structure
 
@@ -46,74 +34,85 @@ src/
 ├── components/
 │   ├── layout/
 │   │   └── sidebar/
-│   │       ├── styles/
-│   │       │   └── Sidebar.styles.ts
-│   │       └── Sidebar.tsx              # Navigation sidebar
+│   │       ├── styles/Sidebar.styles.ts
+│   │       └── Sidebar.tsx
 │   ├── notes/
-│   │   ├── createNoteModal/
-│   │   │   ├── styles/
-│   │   │   │   └── CreateNoteModal.styles.ts
-│   │   │   └── CreateNoteModal.tsx      # Modal form to create a new note
+│   │   ├── createNoteModal/CreateNoteModal.tsx
+│   │   ├── deleteConfirmModal/DeleteConfirmModal.tsx
+│   │   ├── editNoteModal/EditNoteModal.tsx
+│   │   ├── noteForm/NoteForm.tsx
 │   │   ├── notesFilter/
-│   │   │   ├── styles/
-│   │   │   │   └── NotesFilter.styles.ts
-│   │   │   └── NotesFilter.tsx          # Filter bar (site, equipment, date range)
-│   │   ├── notesPage/
-│   │   │   ├── styles/
-│   │   │   │   └── NotesPage.styles.ts
-│   │   │   └── NotesPage.tsx            # Main notes page
+│   │   │   ├── NotesFilter.test.tsx
+│   │   │   └── NotesFilter.tsx
+│   │   ├── notesPage/NotesPage.tsx
 │   │   └── notesTable/
-│   │       ├── styles/
-│   │       │   └── NotesTable.styles.ts
-│   │       └── NotesTable.tsx           # Notes data table with skeleton loading
+│   │       ├── styles/NotesTable.styles.ts
+│   │       ├── NotesTable.test.tsx
+│   │       └── NotesTable.tsx
 │   └── ui/
-│       ├── icons/
-│       │   ├── index.ts                 # Barrel export for all icons
-│       │   ├── AnalyticsIcon.tsx
-│       │   ├── ChevronLeftIcon.tsx
-│       │   ├── ChevronRightIcon.tsx
-│       │   ├── DashboardIcon.tsx
-│       │   ├── DoubleArrowIcon.tsx
-│       │   ├── FilterIcon.tsx
-│       │   ├── HistoryIcon.tsx
-│       │   ├── HomeIcon.tsx
-│       │   ├── LogoIcon.tsx
-│       │   ├── LogsIcon.tsx
-│       │   ├── MapIcon.tsx
-│       │   ├── NotesIcon.tsx
-│       │   ├── PlusIcon.tsx
-│       │   └── XIcon.tsx
-│       └── pagination/
-│           ├── styles/
-│           │   └── Pagination.styles.ts
-│           └── Pagination.tsx           # Pagination control
+│       ├── badge/Badge.tsx
+│       ├── button/Button.tsx
+│       ├── card/Card.tsx
+│       ├── flex/Flex.tsx
+│       ├── formField/FormField.tsx
+│       ├── iconButton/styles/IconButton.styles.ts
+│       ├── icons/                        # 16 SVG icon components
+│       ├── modal/
+│       │   ├── styles/Modal.styles.ts
+│       │   └── Modal.tsx
+│       ├── modalActions/ModalActions.tsx
+│       ├── pagination/
+│       │   ├── styles/Pagination.styles.ts
+│       │   └── Pagination.tsx
+│       ├── skeleton/Skeleton.tsx
+│       ├── tableSkeleton/TableSkeleton.tsx
+│       ├── textInput/TextInput.tsx
+│       ├── textarea/Textarea.tsx
+│       └── typography/Typography.tsx
 ├── hooks/
-│   └── useNotes.ts                      # Data fetching, filtering and pagination state
-├── services/
-│   └── notesService.ts                  # API calls
+│   ├── useModalAction.ts
+│   └── useNotes.ts
+├── services/notesService.ts
 ├── styles/
-│   ├── App.styles.ts                    # Root layout styled components
-│   ├── global.css                       # Base reset and global body styles
-│   ├── styled.d.ts                      # DefaultTheme declaration for styled-components
-│   └── theme.ts                         # Design tokens (colors, spacing, typography)
-├── types/
-│   └── notes.ts                         # TypeScript interfaces
+│   ├── animations.ts
+│   ├── App.styles.ts
+│   ├── global.css
+│   ├── styled.d.ts
+│   └── theme.ts
+├── test/
+│   ├── renderWithTheme.tsx
+│   └── setup.ts
+├── types/notes.ts
+├── utils/date.ts
 ├── App.tsx
 └── main.tsx
 ```
 
-## Styling
+## Design System
 
-Styles are managed with **styled-components**. The design tokens (colors, radius, font, sidebar width) are defined in `src/styles/theme.ts` and provided globally via `ThemeProvider` in `main.tsx`.
+The UI follows an atomic design approach:
 
-The `DefaultTheme` interface is extended in `src/styles/styles.d.ts` so every styled component gets full TypeScript autocomplete on the `theme` prop with no extra configuration needed.
+| Layer | Components | Purpose |
+|-------|-----------|---------|
+| **Atoms** | `Button`, `Flex`, `Typography`, `TextInput`, `Textarea`, `Card`, `Skeleton`, `Badge`, `IconButton` | Reusable primitives |
+| **Molecules** | `Modal`, `FormField`, `TableSkeleton`, `ModalActions` | Composed from atoms |
+| **Organisms** | `NotesPage`, `NotesFilter`, `NotesTable`, `NoteForm`, modals, `Pagination`, `Sidebar` | Feature-level components |
 
-Each component keeps its styled component definitions in a dedicated `styles/` subfolder alongside it, keeping component logic and style definitions cleanly separated.
+Design tokens are defined in `src/styles/theme.ts` and injected via `ThemeProvider` with full `DefaultTheme` TypeScript inference.
 
 ## Features
 
-- View all notes in a paginated table
-- Filter notes by site, equipment, and date range
-- Create new notes via a modal form
-- Skeleton loading state while fetching data
-- Fully typed theme with styled-components
+- Full CRUD — create, edit, delete notes via modals
+- Paginated table with skeleton loading states
+- Filtering by site, equipment, and date range (via backend API)
+- CSV export of the current page
+- 87 automated tests
+
+## Testing
+
+```bash
+yarn test       # vitest run (single pass)
+yarn test:watch # watch mode
+```
+
+Tests use `vitest` with `jsdom`, `@testing-library/react`, and `@testing-library/user-event`. A custom `renderWithTheme` wrapper injects the styled-components theme.
