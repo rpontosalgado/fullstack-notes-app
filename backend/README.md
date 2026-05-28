@@ -1,175 +1,109 @@
 # Backend — Notes API
 
-API RESTful construída com **NestJS**, **TypeORM** e **PostgreSQL** para gerenciamento de notas.
+RESTful API built with **NestJS**, **TypeORM** and **PostgreSQL** for note management.
 
-## Tecnologias
+## Tech Stack
 
-- **NestJS** — framework Node.js modular e opinado
-- **TypeORM** — ORM com suporte nativo a TypeScript
-- **PostgreSQL** — banco de dados relacional
-- **Swagger (OpenAPI)** — documentação interativa da API
-- **class-validator / class-transformer** — validação e transformação de dados
-- **Jest + Supertest** — testes unitários e de integração
-- **Docker + Docker Compose** — containerização da API e do banco de dados
+- **NestJS** — modular, opinionated Node.js framework
+- **TypeORM** — TypeScript-native ORM
+- **PostgreSQL** — relational database
+- **Swagger (OpenAPI)** — interactive API documentation
+- **class-validator / class-transformer** — request validation and transformation
+- **Joi** — environment variable validation
+- **Jest + Supertest** — unit and integration tests (31 tests)
+- **Docker + Docker Compose** — containerized API and database
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
 backend/
 ├── scripts/
-│   └── entrypoint.sh         # Script de inicialização do container
+│   └── entrypoint.sh             # Container startup (migrations + seed + server)
 ├── src/
+│   ├── config/
+│   │   └── env.validation.ts     # Joi environment validation schema
 │   ├── database/
-│   │   ├── data-source.ts    # Configuração do DataSource (TypeORM)
-│   │   └── seed.ts           # Script de carga inicial de dados
+│   │   ├── data-source.ts        # TypeORM DataSource config
+│   │   ├── migrations/           # Versioned schema migrations
+│   │   └── seed.ts               # CSV seed script
 │   └── notes/
 │       ├── dto/
-│       │   ├── create-note.dto.ts
-│       │   └── filter-notes.dto.ts
+│       │   ├── create-notes.dto.ts
+│       │   ├── filter-notes.dto.ts
+│       │   └── update-note.dto.ts
 │       ├── note.entity.ts
 │       ├── notes.controller.ts
 │       ├── notes.controller.spec.ts
 │       ├── notes.module.ts
 │       ├── notes.service.ts
 │       └── notes.service.spec.ts
+│   ├── app.module.ts
+│   └── main.ts
+├── test/
+│   ├── app.e2e-spec.ts
+│   └── jest-e2e.json
 ├── .env.example
 ├── Dockerfile
-└── materials/
-    └── notes.csv             # Dados iniciais
+└── tsconfig.json
 ```
 
-## Como rodar
+## Running
 
-### A. Com Docker (recomendado)
+### With Docker (recommended)
 
-A forma mais simples de rodar o backend é via Docker Compose, sem precisar configurar o PostgreSQL localmente.
-
-**Pré-requisitos**
-
-- Docker
-- Docker Compose
-
-**1. Suba os serviços**
+**Prerequisites:** Docker, Docker Compose
 
 ```bash
 docker-compose up --build
 ```
 
-O seed é executado automaticamente ao iniciar o container, populando o banco com os dados do `materials/notes.csv`. A API estará disponível em `http://localhost:3000` e o Swagger em `http://localhost:3000/api/docs`.
-
-**2. Para encerrar**
+The seed runs automatically on startup. API available at `http://localhost:3000`, Swagger at `http://localhost:3000/api/docs`.
 
 ```bash
-docker-compose down
+docker-compose down -v  # tear down and remove DB volume
 ```
 
-Para remover também o volume do banco de dados:
+### Locally
+
+**Prerequisites:** Node.js >= 18, Yarn 4, PostgreSQL
 
 ```bash
-docker-compose down -v
-```
-
-### B. Localmente
-
-**Pré-requisitos**
-
-- Node.js >= 18
-- Yarn 4
-- PostgreSQL rodando localmente
-
-**1. Instalar dependências**
-
-```bash
+cp .env.example .env   # configure your DB credentials
 yarn install
+yarn seed              # populate DB from ../materials/notes.csv
+yarn start:dev         # hot-reload on port 3000
 ```
 
-**2. Configurar variáveis de ambiente**
+## API Endpoints
 
-```bash
-cp .env.example .env
-```
-
-Ajuste os valores conforme seu ambiente:
-
-```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-DB_NAME=notes_db
-PORT=3000
-```
-
-**3. Criar o banco de dados**
-
-```sql
-CREATE DATABASE notes_db;
-```
-
-**4. Popular o banco com os dados iniciais**
-
-```bash
-yarn seed
-```
-
-O script lê `materials/notes.csv` e insere os registros no banco. Caso já existam dados, o seed é ignorado automaticamente.
-
-**5. Iniciar o servidor**
-
-```bash
-# Desenvolvimento (com hot-reload)
-yarn start:dev
-
-# Produção
-yarn build && yarn start:prod
-```
-
-## Testes
-
-```bash
-# Rodar todos os testes
-yarn test
-
-# Rodar com cobertura
-yarn test:cov
-```
-
-## Documentação da API
-
-A documentação interativa via Swagger está disponível em:
-
-```
-http://localhost:3000/api/docs
-```
-
-## Endpoints
-
-| Método | Rota                | Descrição                           |
-| ------ | ------------------- | ----------------------------------- |
-| `GET`  | `/api/v1/notes`     | Lista notas com filtros e paginação |
-| `GET`  | `/api/v1/notes/:id` | Busca uma nota pelo ID              |
-| `POST` | `/api/v1/notes`     | Cria uma nova nota                  |
+| Method   | Route                | Description                      |
+| -------- | -------------------- | -------------------------------- |
+| `GET`    | `/api/v1/notes`      | List notes (filtered, paginated) |
+| `GET`    | `/api/v1/notes/:id`  | Get note by UUID                 |
+| `POST`   | `/api/v1/notes`      | Create a note                    |
+| `PUT`    | `/api/v1/notes/:id`  | Update a note                    |
+| `DELETE` | `/api/v1/notes/:id`  | Delete a note                    |
 
 ### `GET /api/v1/notes`
 
-Retorna uma lista paginada de notas. Suporta os seguintes filtros via query params:
+Returns a paginated list of notes. Supports the following query params:
 
-| Parâmetro   | Tipo   | Descrição                                         |
-| ----------- | ------ | ------------------------------------------------- |
-| `site`      | string | Filtra por nome do site (correspondência parcial) |
-| `equipment` | string | Filtra por equipamento (correspondência parcial)  |
-| `startDate` | string | Início do período (ISO 8601)                      |
-| `endDate`   | string | Fim do período (ISO 8601)                         |
-| `page`      | number | Número da página (padrão: 1)                      |
-| `limit`     | number | Itens por página (padrão: 10)                     |
+| Parameter   | Type   | Description                         |
+| ----------- | ------ | ----------------------------------- |
+| `site`      | string | Filter by site (partial match)      |
+| `equipment` | string | Filter by equipment (partial match) |
+| `startDate` | string | Period start (ISO 8601)             |
+| `endDate`   | string | Period end (ISO 8601)               |
+| `page`      | number | Page number (default: 1)            |
+| `limit`     | number | Items per page (default: 10)        |
 
-**Exemplo:**
+**Example:**
 
 ```
 GET /api/v1/notes?site=Martins&equipment=Gerador&startDate=2024-01-01&endDate=2024-08-31&page=1&limit=10
 ```
 
-**Resposta:**
+**Response:**
 
 ```json
 {
@@ -183,11 +117,11 @@ GET /api/v1/notes?site=Martins&equipment=Gerador&startDate=2024-01-01&endDate=20
 
 ### `GET /api/v1/notes/:id`
 
-Retorna uma nota pelo UUID. Retorna `404` caso não encontrada.
+Returns a note by UUID. Returns `404` if not found.
 
 ### `POST /api/v1/notes`
 
-Cria uma nova nota.
+Creates a new note. Returns `201 Created`.
 
 **Body:**
 
@@ -202,4 +136,26 @@ Cria uma nova nota.
 }
 ```
 
-**Resposta:** `201 Created` com o objeto da nota criada.
+### `PUT /api/v1/notes/:id`
+
+Updates a note. All fields are optional — only provided fields are updated.
+
+### `DELETE /api/v1/notes/:id`
+
+Deletes a note. Returns `204 No Content`.
+
+## API Documentation
+
+Interactive Swagger docs available at:
+
+```
+http://localhost:3000/api/docs
+```
+
+## Testing
+
+```bash
+yarn workspace @roberto-de-abreu-salgado-desafio-full-stack/backend run jest
+```
+
+Tests cover the controller (integration via Supertest) and service (unit with mocked repository) — 31 tests total.
