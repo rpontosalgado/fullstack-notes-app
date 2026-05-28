@@ -1,8 +1,6 @@
 import { Modal } from '../../ui/modal/Modal';
 import { useModalAction } from '../../../hooks/useModalAction';
-import {
-  Typography,
-} from '../../ui/typography/Typography';
+import { Typography } from '../../ui/typography/Typography';
 import { ModalActions } from '../../ui/modalActions/ModalActions';
 
 interface DeleteConfirmModalProps {
@@ -30,7 +28,7 @@ export function DeleteConfirmModal({
       error={error}
     >
       <Typography $variant="body">
-        Tem certeza que deseja excluir esta nota? Esta acao nao pode ser
+        Tem certeza que deseja excluir esta nota? Esta ação nao pode ser
         desfeita.
       </Typography>
 

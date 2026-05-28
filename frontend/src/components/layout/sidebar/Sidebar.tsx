@@ -30,7 +30,7 @@ const mainNavItems: NavItem[] = [
   { icon: <HomeIcon />, label: 'Home' },
   { icon: <AnalyticsIcon />, label: 'Analytics' },
   { icon: <NotesIcon />, label: 'Notas', active: true },
-  { icon: <HistoryIcon />, label: 'Historico' },
+  { icon: <HistoryIcon />, label: 'Histórico' },
   { icon: <MapIcon />, label: 'Mapa' },
   { icon: <DashboardIcon />, label: 'Dashboard' },
 ];
@@ -44,7 +44,14 @@ export const Sidebar = () => {
         <LogoIcon />
       </div>
 
-      <Flex as="nav" $direction="column" $gap={24} $flex={1} $padding="16px 0" style={{ overflowY: 'auto' }}>
+      <Flex
+        as="nav"
+        $direction="column"
+        $gap={24}
+        $flex={1}
+        $padding="16px 0"
+        style={{ overflowY: 'auto' }}
+      >
         <Flex $direction="column" $gap={4}>
           <div style={{ padding: '0 20px', marginBottom: 4 }}>
             <Typography $variant="h3">Menu Principal</Typography>
@@ -87,7 +94,7 @@ export const Sidebar = () => {
         style={{ borderTop: '1px solid #393939' }}
       >
         <Typography $variant="caption">
-          &copy; 2024 Notes App | v1.0.0
+          &copy; 2026 Notes App | v1.0.0
         </Typography>
         <Flex $align="center" $gap={10}>
           <Badge $size="md">JD</Badge>

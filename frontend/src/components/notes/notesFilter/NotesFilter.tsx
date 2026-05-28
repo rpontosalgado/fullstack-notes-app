@@ -57,7 +57,7 @@ export function NotesFilter({ onFilter }: NotesFilterProps) {
             onChange={(e) => setStartDate(e.target.value)}
             style={{ minWidth: 140 }}
           />
-          <Typography $variant="caption">ate</Typography>
+          <Typography $variant="caption">até</Typography>
           <TextInput
             type="date"
             value={endDate}

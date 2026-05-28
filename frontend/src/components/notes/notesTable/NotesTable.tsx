@@ -31,7 +31,11 @@ export function NotesTable({
   onDelete,
 }: NotesTableProps) {
   if (error) {
-    return <Typography $variant="error" $align="center" style={{ padding: 32 }}>Erro ao carregar notas: {error}</Typography>;
+    return (
+      <Typography $variant="error" $align="center" style={{ padding: 32 }}>
+        Erro ao carregar notas: {error}
+      </Typography>
+    );
   }
 
   return (
@@ -41,11 +45,11 @@ export function NotesTable({
           <tr>
             <Th>Site</Th>
             <Th>Equipamento</Th>
-            <Th>Monitoracao</Th>
+            <Th>Monitoração</Th>
             <Th>Data</Th>
             <Th>Autor</Th>
             <Th>Mensagem</Th>
-            <Th>Acoes</Th>
+            <Th>Ações</Th>
           </tr>
         </thead>
         <tbody>
