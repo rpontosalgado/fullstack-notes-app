@@ -33,7 +33,7 @@ describe('NotesTable', () => {
     );
     expect(screen.getByText('Site')).toBeInTheDocument();
     expect(screen.getByText('Equipamento')).toBeInTheDocument();
-    expect(screen.getByText('Acoes')).toBeInTheDocument();
+    expect(screen.getByText('Ações')).toBeInTheDocument();
   });
 
   it('renders note data', () => {

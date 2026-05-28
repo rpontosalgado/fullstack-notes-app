@@ -40,6 +40,7 @@ export function FormField({
           placeholder={placeholder}
           required={required}
           rows={rows}
+          $fullWidth
         />
       ) : (
         <TextInput
@@ -50,6 +51,7 @@ export function FormField({
           placeholder={placeholder}
           required={required}
           $variant="filled"
+          $fullWidth
         />
       )}
     </Flex>

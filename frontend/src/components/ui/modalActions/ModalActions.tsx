@@ -21,7 +21,7 @@ export function ModalActions({
   variant = 'primary',
 }: ModalActionsProps) {
   return (
-    <Flex $justify="end" $gap={10} $padding="0 24px 20px">
+    <Flex $justify="end" $gap={10} $padding="20px 0 0 0" style={{ width: '100%' }}>
       <Button type="button" $variant="secondary" onClick={onCancel}>
         Cancelar
       </Button>

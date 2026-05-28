@@ -95,7 +95,7 @@ export function NotesPage() {
       />
 
       {data && data.totalPages > 1 && (
-        <Flex $align="center" $justify="space-between" $padding="4px 0">
+        <Flex $align="center" $justify="space-between" $padding="4px 0" style={{ width: '100%' }}>
           <Typography $variant="caption">
             {data.total} nota{data.total !== 1 ? 's' : ''} encontrada
             {data.total !== 1 ? 's' : ''}
