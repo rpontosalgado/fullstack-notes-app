@@ -20,7 +20,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: packages/backend/Dockerfile
     container_name: notes_api
     restart: unless-stopped
     environment:
