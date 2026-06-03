@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { exportToCSV } from './csvExport';
+import { formatLocalDate } from './date';
 import type { Note } from '../types/notes';
 
 const sampleNotes: Note[] = [
@@ -103,9 +104,9 @@ describe('exportToCSV', () => {
     expect(capturedBlob?.type).toBe('text/csv;charset=utf-8;');
   });
 
-  it('uses a notas_YYYY-MM-DD.csv filename in UTC', () => {
+  it('uses a notas_YYYY-MM-DD.csv filename in local time', () => {
     exportToCSV(sampleNotes);
-    const expected = `notas_${new Date().toISOString().slice(0, 10)}.csv`;
+    const expected = `notas_${formatLocalDate(new Date())}.csv`;
     expect(anchor.download).toBe(expected);
   });
 
