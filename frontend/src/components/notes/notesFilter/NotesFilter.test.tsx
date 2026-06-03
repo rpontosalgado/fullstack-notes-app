@@ -1,14 +1,18 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+/// <reference types="@testing-library/jest-dom/vitest" />
+import { type Mock, describe, it, expect, vi, beforeEach } from 'vitest';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { NotesFilter } from './NotesFilter';
 import { renderWithTheme } from '../../../test/renderWithTheme';
+import type { NotesFilters } from '../../../types/notes';
+
+type FilterFn = (filters: Omit<NotesFilters, 'page' | 'limit'>) => void;
 
 describe('NotesFilter', () => {
-  let onFilter: ReturnType<typeof vi.fn>;
+  let onFilter: Mock<FilterFn>;
 
   beforeEach(() => {
-    onFilter = vi.fn();
+    onFilter = vi.fn<FilterFn>();
   });
 
   it('renders all filter inputs', () => {
