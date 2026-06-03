@@ -3,6 +3,7 @@ import { useModalAction } from '../../../hooks/useModalAction';
 import type { CreateNotePayload } from '../../../types/notes';
 import { NoteForm } from '../noteForm/NoteForm';
 import type { NoteFormPayload } from '../noteForm/NoteForm';
+import { toLocalDateTimeString } from '../../../utils/date';
 
 interface CreateNoteModalProps {
   onClose: () => void;
@@ -13,7 +14,7 @@ const emptyForm: NoteFormPayload = {
   site: '',
   equipment: '',
   variable: '',
-  timestamp: new Date().toISOString().slice(0, 16),
+  timestamp: toLocalDateTimeString(new Date()),
   author: '',
   message: '',
 };
