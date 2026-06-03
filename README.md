@@ -6,9 +6,10 @@ A full-stack notes management application built with NestJS, PostgreSQL, React, 
 
 ```
 .
-├── backend/    # RESTful API (NestJS + PostgreSQL)
-├── frontend/   # React SPA (Vite + TypeScript + styled-components)
-├── materials/  # Seed data (notes.csv)
+├── packages/
+│   ├── backend/    # RESTful API (NestJS + PostgreSQL)
+│   └── frontend/   # React SPA (Vite + TypeScript + styled-components)
+├── materials/      # Seed data (notes.csv)
 └── docker-compose.yml
 ```
 
@@ -49,7 +50,7 @@ docker-compose down -v
 #### Locally
 
 ```bash
-cd backend
+cd packages/backend
 cp .env.example .env   # configure your DB credentials
 yarn install
 yarn seed              # populate DB from materials/notes.csv
@@ -71,7 +72,7 @@ yarn start:dev         # hot-reload on port 3000
 ### Testing
 
 ```bash
-yarn workspace @roberto-de-abreu-salgado-desafio-full-stack/backend run jest
+yarn workspace @notes-app/backend run jest
 ```
 
 ---
@@ -95,7 +96,7 @@ yarn workspace @roberto-de-abreu-salgado-desafio-full-stack/backend run jest
 ### Running
 
 ```bash
-cd frontend
+cd packages/frontend
 yarn install
 yarn dev                # http://localhost:5173
 yarn build              # production build
@@ -126,8 +127,9 @@ All design tokens (colors, spacing, typography, radius) are centralized in `src/
 ### Testing
 
 ```bash
-yarn workspace frontend test       # single run
-yarn workspace frontend test:watch # watch mode
+yarn test          # run all tests
+yarn test:backend  # backend only
+yarn test:frontend # frontend only
 ```
 
 ---

@@ -1,15 +1,15 @@
 #!/usr/bin/env sh
 
 echo "==> Running backend lint..."
-yarn workspace @roberto-de-abreu-salgado-desafio-full-stack/backend lint || { echo "❌ Backend lint failed"; exit 1; }
+yarn workspace @notes-app/backend lint || { echo "❌ Backend lint failed"; exit 1; }
 
 echo "==> Running backend tests..."
-yarn workspace @roberto-de-abreu-salgado-desafio-full-stack/backend run jest --passWithNoTests || { echo "❌ Backend tests failed"; exit 1; }
+yarn workspace @notes-app/backend run jest --passWithNoTests || { echo "❌ Backend tests failed"; exit 1; }
 
 echo "==> Running frontend lint..."
-yarn workspace frontend lint || { echo "❌ Frontend lint failed"; exit 1; }
+yarn workspace @notes-app/frontend lint || { echo "❌ Frontend lint failed"; exit 1; }
 
 echo "==> Running frontend tests..."
-yarn workspace frontend test || { echo "❌ Frontend tests failed"; exit 1; }
+yarn workspace @notes-app/frontend test || { echo "❌ Frontend tests failed"; exit 1; }
 
 echo "✅ All checks passed!"
