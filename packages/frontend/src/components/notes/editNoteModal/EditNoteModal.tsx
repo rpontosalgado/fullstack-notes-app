@@ -3,6 +3,7 @@ import { useModalAction } from '../../../hooks/useModalAction';
 import type { Note, UpdateNotePayload } from '../../../types/notes';
 import { NoteForm } from '../noteForm/NoteForm';
 import type { NoteFormPayload } from '../noteForm/NoteForm';
+import { toLocalDateTimeString } from '../../../utils/date';
 
 interface EditNoteModalProps {
   note: Note;
@@ -15,7 +16,7 @@ function noteToForm(note: Note): NoteFormPayload {
     site: note.site,
     equipment: note.equipment,
     variable: note.variable,
-    timestamp: note.timestamp.slice(0, 16),
+    timestamp: toLocalDateTimeString(new Date(note.timestamp)),
     author: note.author,
     message: note.message,
   };

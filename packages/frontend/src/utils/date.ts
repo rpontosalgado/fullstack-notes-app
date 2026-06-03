@@ -11,3 +11,18 @@ export function formatDate(
     second: '2-digit',
   });
 }
+
+function pad(n: number): string {
+  return String(n).padStart(2, '0');
+}
+
+export function formatLocalDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  return `${year}-${month}-${day}`;
+}
+
+export function toLocalDateTimeString(date: Date): string {
+  return `${formatLocalDate(date)}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}

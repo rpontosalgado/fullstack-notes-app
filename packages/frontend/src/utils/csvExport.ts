@@ -1,4 +1,5 @@
 import type { Note } from '../types/notes';
+import { formatLocalDate } from './date';
 
 export function exportToCSV(notes: Note[]) {
   const headers = [
@@ -31,7 +32,7 @@ export function exportToCSV(notes: Note[]) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `notas_${new Date().toISOString().slice(0, 10)}.csv`;
+  link.download = `notas_${formatLocalDate(new Date())}.csv`;
   link.click();
   URL.revokeObjectURL(url);
 }
